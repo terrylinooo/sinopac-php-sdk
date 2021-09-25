@@ -1,0 +1,41 @@
+{
+    "name": "terrylinooo/sinopac-php-sdk",
+    "description": "SinoPac Bank SDK for PHP.",
+    "keywords": ["q-pay", "payment"],
+    "homepage": "https://github.com/terrylinooo/sinopac-php-sdk",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Terry Lin",
+            "email": "contact@terryl.in",
+            "homepage": "https://terryl.in",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7.1.0",
+        "monolog/monolog": "^1.25|^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sinopac\\QPay\\": "src/QPay",
+            "Sinopac\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Sinopac\\Test\\QPay\\": "tests/QPay"
+        }
+    },
+    "config": {
+        "process-timeout": 0,
+        "sort-packages": true
+    },
+    "scripts": {
+        "test": "php vendor/phpunit/phpunit/phpunit"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}
