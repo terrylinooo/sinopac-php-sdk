@@ -129,13 +129,14 @@ class QPay
     /**
      * Query a single order's information by its PayToken.
      *
-     * @param string $token The PayToken.
+     * @param string $token  The PayToken.
      *
      * @return array
      */
     public function queryOrderByToken(string $token)
     {
         $apiService = 'OrderPayQuery';
+
         $formData['shop_no'] = $this->getShopNo();
         $formData['pay_token'] = $token;
 

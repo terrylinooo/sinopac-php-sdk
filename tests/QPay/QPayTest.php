@@ -81,12 +81,55 @@ class QPayTest extends TestCase
 
     public function test_method_queryOrders()
     {
+        $data = [
+            'shop_no'              => get_testing_shop_no(),
+            'pay_type'             => 'A',
+            'order_datetime_begin' => '202109250110',
+            'order_datetime_end'   => '202109262359'
+        ];
 
+        $qpay = get_qpay_instance();
+        $results = $qpay->queryOrders($data);
+
+        if (empty($results['APIService'])) {
+            $this->assertTrue(false);
+        } else {
+            $this->assertSame('1.0.0', $results['Version']);
+            $this->assertSame($data['shop_no'], $results['ShopNo']);
+            $this->assertSame('OrderQuery', $results['APIService']);
+            $this->assertNotEmpty($results['Sign']);
+            $this->assertNotEmpty($results['Nonce']);
+            $this->assertSame($data['shop_no'], $results['Message']['ShopNo']);
+            $this->assertNotEmpty($results['Message']['Date']);
+            $this->assertSame('S', $results['Message']['Status']);
+            $this->assertNotEmpty($results['Message']['Description']);
+            $this->assertNotEmpty($results['Message']['OrderList']);
+        }
     }
 
     public function test_method_queryOrderByToken()
     {
+        $data = [
+            'shop_no'   => get_testing_shop_no(),
+            'pay_token' => 'da1547c3d0d1649af5049125b0880c0e227f31e107cbf4f0995bed28d0f066c1',
+        ];
 
+        $qpay = get_qpay_instance();
+        $results = $qpay->queryOrderByToken($data['pay_token']);
+        if (empty($results['APIService'])) {
+            $this->assertTrue(false);
+        } else {
+            $this->assertSame('1.0.0', $results['Version']);
+            $this->assertSame($data['shop_no'], $results['ShopNo']);
+            $this->assertSame('OrderPayQuery', $results['APIService']);
+            $this->assertNotEmpty($results['Sign']);
+            $this->assertNotEmpty($results['Nonce']);
+            $this->assertSame($data['shop_no'], $results['Message']['ShopNo']);
+            $this->assertSame($data['pay_token'], $results['Message']['PayToken']);
+            $this->assertNotEmpty($results['Message']['Date']);
+            $this->assertSame('S', $results['Message']['Status']);
+            $this->assertNotEmpty($results['Message']['Description']);
+        }
     }
 }
 

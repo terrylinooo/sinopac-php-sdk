@@ -114,6 +114,19 @@ trait Assertion
      * @return void
      * @throws QPayException
      */
+    protected function assertOrderPayQuery(array $fields): void
+    {
+        $this->assertApiServiceFields('OrderPayQuery', $fields);
+    }
+
+    /**
+     * Check if every field is fit with the limitation.
+     *
+     * @param array $fields The input data.
+     *
+     * @return void
+     * @throws QPayException
+     */
     private function assertApiServiceFields(string $type, array $fields): void
     {
         $apiFieldsLimitation = Fields::{$type}($fields);
