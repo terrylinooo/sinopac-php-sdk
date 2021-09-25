@@ -295,6 +295,21 @@ trait Foundation
             $data = [];
         }
 
+        $hashId = $this->getHashId(
+            $this->firstHashPair[0],
+            $this->firstHashPair[1],
+            $this->secondHashPair[0],
+            $this->secondHashPair[1],
+        );
+
+        $nonce = $this->getIV($data['Nonce']);
+
+        $data['Message'] = $this->aesDecrypt(
+            $data['Message'],
+            $hashId,
+            $nonce,
+        );
+
         return $data;
     }
 }
