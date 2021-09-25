@@ -15,6 +15,7 @@ namespace Sinopac\QPay;
 use Sinopac\Exception\QPayException;
 use Sinopac\QPay\Fields;
 use InvalidArgumentException;
+use DateTime;
 
 use function explode;
 use function gettype;
@@ -87,10 +88,36 @@ trait Assertion
      * @return void
      * @throws QPayException
      */
-    public function assertOrderCreate(array $fields): void
+    protected function assertOrderCreate(array $fields): void
     {
-        $apiFieldsLimitation = Fields::OrderCreate($fields);
+        $this->assertApiServiceFields('OrderCreate', $fields);
+    }
 
+    /**
+     * Check if every field is fit with the limitation.
+     *
+     * @param array $fields The input data.
+     *
+     * @return void
+     * @throws QPayException
+     */
+    protected function assertOrderQuery(array $fields): void
+    {
+        $this->assertApiServiceFields('OrderQuery', $fields);
+    }
+
+    /**
+     * Check if every field is fit with the limitation.
+     *
+     * @param array $fields The input data.
+     *
+     * @return void
+     * @throws QPayException
+     */
+    private function assertApiServiceFields(string $type, array $fields): void
+    {
+        $apiFieldsLimitation = Fields::{$type}($fields);
+        
         foreach ($apiFieldsLimitation as $name => $limitation) {
             $this->assertFieldRequired($limitation['required'], $fields, $name);
             $this->assertFieldType($limitation['type'], $fields, $name);
@@ -245,13 +272,27 @@ trait Assertion
                 break;
 
             case 'method':
-
                 // Complex rules are processed in another assertion method.
                 $this->{$ruleContent}($fields, $name);
 
                 break;
+
+            case 'date':
+                $date = DateTime::createFromFormat($ruleContent, $fields[$name]);
+                $check = ($date && $date->format($ruleContent) == $fields[$name]);
+
+                if (!$check) {
+                    throw new QPayException(
+                        sprintf(
+                            'Field %s should be fit with the date format of %d.',
+                            $name,
+                            $ruleContent,
+                        )
+                    );
+                }
+
+                break;
         }
-        
     }
 
     /**
@@ -263,7 +304,7 @@ trait Assertion
      * @return void
      * @throws QPayException
      */
-    public function assertFieldAmount(array $fields, string $name): void
+    private function assertFieldAmount(array $fields, string $name): void
     {
         if ($fields['pay_type'] === 'A' && $fields['amount'] > 3000000) {
             throw new QPayException(
@@ -281,7 +322,7 @@ trait Assertion
      * @return void
      * @throws QPayException
      */
-    public function assertFieldUrlDecode(array $fields, string $name): void
+    private function assertFieldUrlDecode(array $fields, string $name): void
     {
         $string = str_replace(['"', "'", '%'], '', $fields[$name]);
 
@@ -296,7 +337,7 @@ trait Assertion
         }
     }
 
-    public function assertFieldDateExpired(array $fields, string $name): void
+    private function assertFieldDateExpired(array $fields, string $name): void
     {
         // Todo
     }

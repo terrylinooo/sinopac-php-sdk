@@ -68,15 +68,14 @@ class QPay
     public function createOrder(string $type, array $formData)
     {
         $apiService = 'OrderCreate';
+        $formData['shop_no'] = $this->getShopNo();
         $formData['pay_type'] = $type;
         $formData['currency_id'] = 'TWD';
 
         $this->assertOrderCreate($formData);
 
         $fields = Fields::getApiFields($apiService, $formData);
-
         $requestBody = $this->getRequestBody($apiService, $fields);
-
         $results = $this->sendRequest($requestBody);
 
         return $results;
@@ -107,15 +106,16 @@ class QPay
     }
 
     /**
-     * Undocumented function
+     * Query a deluge of orders' information.
      *
-     * @param array $formData
+     * @param array $formData The message body.
      *
      * @return array
      */
     public function queryOrders(array $formData)
     {
         $apiService = 'OrderQuery';
+        $formData['shop_no'] = $this->getShopNo();
 
         $this->assertOrderQuery($formData);
 
@@ -127,21 +127,21 @@ class QPay
     }
 
     /**
-     * Query a single order's information by its pay-token.
+     * Query a single order's information by its PayToken.
      *
-     * @param string $token 
+     * @param string $token The PayToken.
      *
      * @return array
      */
     public function queryOrderByToken(string $token)
     {
         $apiService = 'OrderPayQuery';
+        $formData['shop_no'] = $this->getShopNo();
+        $formData['pay_token'] = $token;
 
-        $fields = [
-            'ShopNo'   => $this->getShipNo(),
-            'PayToken' => $token,
-        ];
+        $this->assertOrderPayQuery($formData);
 
+        $fields = Fields::getApiFields($apiService, $formData);
         $requestBody = $this->getRequestBody($apiService, $fields);
         $results = $this->sendRequest($requestBody);
 

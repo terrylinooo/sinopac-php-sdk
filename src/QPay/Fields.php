@@ -50,7 +50,7 @@ class Fields
      *
      * @return array
      */
-    public static function OrderCreate(array $fields): array
+    public static function OrderCreate(array $fields = []): array
     {
         $fields['pay_type'] = $fields['pay_type'] ?? null;
         $fields['cc_auto_billing'] = $fields['cc_auto_billing'] ?? null;
@@ -68,12 +68,12 @@ class Fields
                 'type'     => 'string', 
                 'length'   => 50, 
                 'required' => true,
-                'rules'    => '',
+                'rules'    => 'method:assertFieldUrlDecode',
             ],
             'pay_type' => [
                 'name'     => 'PayType',
                 'type'     => 'string', 
-                'length'   => 255, 
+                'length'   => 1, 
                 'required' => true,
                 'rules'    => 'string:A|C',
             ],
@@ -163,7 +163,7 @@ class Fields
                 'type'     => 'integer', 
                 'length'   => 2, 
                 'required' => ($fields['pay_type'] === 'C' && $fields['cc_auto_billing'] === 'N'),
-                'rules'    => 'integer:1-21', 
+                'rules'    => 'integer:1-7', 
             ],
             'cc_expired_minutes' => [
                 'parent'   => 'CardParam',
@@ -173,6 +173,102 @@ class Fields
                 'required' => ($fields['pay_type'] === 'C'),
                 'default'  => 10,
                 'rules'    => 'integer:1-30', 
+            ],
+        ];
+    }
+
+    /**
+     * Fields for Order API - OrderQuery
+     *
+     * @param array $fields The input data.
+     *
+     * @return array
+     */
+    public static function OrderQuery(array $fields = []): array
+    {
+        return [
+            'shop_no' => [
+                'name'     => 'ShopNo',
+                'type'     => 'string', 
+                'length'   => 20, 
+                'required' => true,
+                'rules'    => '',
+            ],
+            'order_no' => [
+                'name'     => 'OrderNo',
+                'type'     => 'string', 
+                'length'   => 50, 
+                'required' => false,
+                'rules'    => '',
+            ],
+            'pay_type' => [
+                'name'     => 'PayType',
+                'type'     => 'string', 
+                'length'   => 1, 
+                'required' => false,
+                'rules'    => 'string:A|C',
+            ],
+            'order_datetime_begin' => [
+                'name'     => 'OrderDateTimeS ',
+                'type'     => 'string', 
+                'length'   => 12, 
+                'required' => false,
+                'rules'    => 'date:YmdHi',
+            ],
+            'order_datetime_end' => [
+                'name'     => 'OrderDateTimeE ',
+                'type'     => 'string', 
+                'length'   => 12, 
+                'required' => false,
+                'rules'    => 'date:YmdHi',
+            ],
+            'pay_datetime_begin' => [
+                'name'     => 'PayDateTimeS ',
+                'type'     => 'string', 
+                'length'   => 12, 
+                'required' => false,
+                'rules'    => 'date:YmdHi',
+            ],
+            'pay_datetime_end' => [
+                'name'     => 'PayDateTimeE ',
+                'type'     => 'string', 
+                'length'   => 12, 
+                'required' => false,
+                'rules'    => 'date:YmdHi',
+            ],
+            'pay_flag' => [
+                'name'     => 'PayFlag ',
+                'type'     => 'string', 
+                'length'   => 1, 
+                'required' => false,
+                'rules'    => 'string:Y|N|O',
+            ],
+        ];
+    }
+
+    /**
+     * Fields for Order API - OrderPayQuery
+     *
+     * @param array $fields The input data.
+     *
+     * @return array
+     */
+    public static function OrderPayQuery(array $fields = []): array
+    {
+        return [
+            'shop_no' => [
+                'name'     => 'ShopNo',
+                'type'     => 'string', 
+                'length'   => 20, 
+                'required' => true,
+                'rules'    => '',
+            ],
+            'pay_token' => [
+                'name'     => 'PayToken',
+                'type'     => 'string', 
+                'length'   => 100, 
+                'required' => true,
+                'rules'    => '',
             ],
         ];
     }

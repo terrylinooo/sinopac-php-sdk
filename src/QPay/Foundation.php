@@ -304,11 +304,13 @@ trait Foundation
 
         $nonce = $this->getIV($data['Nonce']);
 
-        $data['Message'] = $this->aesDecrypt(
+        $decryptedData = $this->aesDecrypt(
             $data['Message'],
             $hashId,
             $nonce,
         );
+
+        $data['Message'] = json_decode($decryptedData, true);
 
         return $data;
     }
