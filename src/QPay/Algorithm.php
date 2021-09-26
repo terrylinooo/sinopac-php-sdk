@@ -121,7 +121,8 @@ trait Algorithm
      *
      * @return string
      */
-    function aesEncrypt(array $data, string $key, string $iv) {
+    function aesEncrypt(array $data, string $key, string $iv): string
+    {
         $json = json_encode($data);
         $encrypt = openssl_encrypt($json, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
         $result = strtoupper(bin2hex($encrypt));
@@ -138,7 +139,8 @@ trait Algorithm
      *
      * @return string
      */
-    function aesDecrypt(string $hex, string $key, string $iv) {
+    function aesDecrypt(string $hex, string $key, string $iv): string
+    {
         $data = hex2bin($hex);
         $result = openssl_decrypt($data, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
 

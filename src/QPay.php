@@ -72,7 +72,7 @@ class QPay
      * @return array
      * @throws QPayException
      */
-    public function createOrder(string $type, array $formData)
+    public function createOrder(string $type, array $formData): array
     {
         $apiService = 'OrderCreate';
         $formData['shop_no'] = $this->getShopNo();
@@ -95,7 +95,7 @@ class QPay
      *
      * @return array
      */
-    public function createOrderByCreditCard(array $formData)
+    public function createOrderByCreditCard(array $formData): array
     {
         return $this->createOrder('C', $formData);
     }
@@ -107,7 +107,7 @@ class QPay
      *
      * @return array
      */
-    public function createOrderByATM(array $formData)
+    public function createOrderByATM(array $formData): array
     {
         return $this->createOrder('A', $formData);
     }
@@ -119,7 +119,7 @@ class QPay
      *
      * @return array
      */
-    public function queryOrders(array $formData)
+    public function queryOrders(array $formData): array
     {
         $apiService = 'OrderQuery';
         $formData['shop_no'] = $this->getShopNo();
@@ -140,7 +140,7 @@ class QPay
      *
      * @return array
      */
-    public function queryOrderByToken(string $token)
+    public function queryOrderByToken(string $token): array
     {
         $apiService = 'OrderPayQuery';
 
