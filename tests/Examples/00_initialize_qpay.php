@@ -1,5 +1,10 @@
 <?php
 
+defined('PHPUNIT_TEST') || exit('Example code is not allowed to access.');
+
+/**
+ * Example 00. Initialize QPay instance.
+ */
 include __DIR__ . '/../../autoload.php';
 
 // Method 1.

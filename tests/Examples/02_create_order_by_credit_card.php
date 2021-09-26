@@ -1,5 +1,10 @@
 <?php
 
+defined('PHPUNIT_TEST') || exit('Example code is not allowed to access.');
+
+/**
+ * Example 02. Create order by payment Credit Card.
+ */
 include __DIR__ . '/../../autoload.php';
 
 $qpay = new \Sinopac\QPay();
