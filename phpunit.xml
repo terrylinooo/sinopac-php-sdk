@@ -11,7 +11,8 @@
   </coverage>
   <testsuites>
     <testsuite name="Sinopac Test Suite">
-      <directory>tests/QPay/</directory>
+      <directory>./tests/QPay</directory>
+      <exclude>./tests/Examples</exclude>
     </testsuite>
   </testsuites>
   <php>

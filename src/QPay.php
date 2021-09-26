@@ -39,7 +39,7 @@ class QPay
             $this->assertConfig($config);
 
             $this->setShopNo($config['shop_no']);
-    
+
             $this->setFirstHashPair(
                 $config['hash'][0],
                 $config['hash'][1]
