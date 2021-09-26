@@ -36,7 +36,7 @@ trait Algorithm
             return !empty($value) && !is_array($value);
         });
 
-        $hashedBody = rawurldecode(http_build_query($body));
+        $hashedBody = urldecode(http_build_query($body));
 
         return $hashedBody;
     }
@@ -104,11 +104,11 @@ trait Algorithm
      */
     function aesEncrypt(array $data, string $key, string $iv) {
         $json = json_encode($data);
-		$encrypt = openssl_encrypt($json, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
-		$result = strtoupper(bin2hex($encrypt));
+        $encrypt = openssl_encrypt($json, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+        $result = strtoupper(bin2hex($encrypt));
 
-		return $result;
-	}
+        return $result;
+    }
 
     /**
      * Decrypt data by AES-256-CBC
@@ -121,10 +121,10 @@ trait Algorithm
      */
     function aesDecrypt(string $hex, string $key, string $iv) {
         $data = hex2bin($hex);
-		$result = openssl_decrypt($data, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+        $result = openssl_decrypt($data, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
 
-		return $result;
-	}
+        return $result;
+    }
 
     /**
      * Get the HashId.
@@ -176,11 +176,11 @@ trait Algorithm
     {
         $results = [];
 
-		for ($i = 0; $i < count($decimalGroup1); $i++ ) {
-			$results[$i] = ($decimalGroup1[$i] ^ $decimalGroup2[$i]);		
-		}
+        for ($i = 0; $i < count($decimalGroup1); $i++ ) {
+            $results[$i] = ($decimalGroup1[$i] ^ $decimalGroup2[$i]);		
+        }
 
-		return $results;
+        return $results;
     }
 
     /**
@@ -192,35 +192,35 @@ trait Algorithm
      */
     private function hexToDec(string $string): array
     {
-		$decimalGroup = [];
-		$j = 0;
-		
-		for ($i = 0; $i < strlen($string); $i += 2) {
-			$decimalGroup[$j] = (int) base_convert(substr($string, $i, 2), 16, 10);
-			$j++;
-		}
+        $decimalGroup = [];
+        $j = 0;
+        
+        for ($i = 0; $i < strlen($string); $i += 2) {
+            $decimalGroup[$j] = (int) base_convert(substr($string, $i, 2), 16, 10);
+            $j++;
+        }
 
-		return $decimalGroup;
-	}
+        return $decimalGroup;
+    }
 
-	/**
+    /**
      * Restore a decimal number group to a hexadecimal string.
      *
      * @param array $decimalGroup
      *
      * @return string
      */
-	private function restoreDecToHex(array $decimalGroup): string
+    private function restoreDecToHex(array $decimalGroup): string
     {
-		$hexGroup = [];
+        $hexGroup = [];
 
-		for ($i = 0; $i < count($decimalGroup); $i++) {
-			$hexGroup[$i] = base_convert((string) $decimalGroup[$i], 10, 16);
+        for ($i = 0; $i < count($decimalGroup); $i++) {
+            $hexGroup[$i] = base_convert((string) $decimalGroup[$i], 10, 16);
             $hexGroup[$i] = str_pad($hexGroup[$i], 2, '0', STR_PAD_LEFT);
-		}
+        }
 
         $hexString = strtoupper(implode('', $hexGroup));
 
-		return $hexString;
-	}
+        return $hexString;
+    }
 }
