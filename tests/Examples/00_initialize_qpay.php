@@ -21,3 +21,6 @@ $qpay->setShopNo('NA0249_001');
 $qpay->setFirstHashPair('86D50DEF3EB7400E', '01FD27C09E5549E5');
 $qpay->setSecondHashPair('9E004965F4244953', '7FB3385F414E4F91');
 
+// Enabling sandbox mode will send API request to Sinopac's testing server.
+$qpay->enableSandbox();
+
