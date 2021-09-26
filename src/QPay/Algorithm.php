@@ -12,6 +12,25 @@ declare(strict_types=1);
 
 namespace Sinopac\QPay;
 
+use function array_filter;
+use function base_convert;
+use function bin2hex;
+use function count;
+use function hash;
+use function hex2bin;
+use function http_build_query;
+use function implode;
+use function is_array;
+use function json_encode;
+use function ksort;
+use function openssl_decrypt;
+use function openssl_encrypt;
+use function str_pad;
+use function strlen;
+use function strtoupper;
+use function substr;
+use function urldecode;
+
 /**
  * The algorithmic logic we will use.
  */

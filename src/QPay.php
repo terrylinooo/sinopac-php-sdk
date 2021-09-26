@@ -22,11 +22,18 @@ use Sinopac\QPay\Logger;
  */
 class QPay
 {
-    use Foundation;
-
     use Assertion;
 
+    use Foundation;
+
     use Logger;
+
+    /**
+     * Sinopac PHP SDK version number.
+     * 
+     * @var string
+     */
+    const SDK_VERSION = '0.0.1';
 
     /**
      * Constructor.
