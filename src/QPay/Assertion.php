@@ -255,7 +255,7 @@ trait Assertion
                             $message,
                             $name,
                             implode(', ', $ruleOptions),
-                            $fields[$name],
+                            $fields[$name]
                         )
                     );
                 }
@@ -277,7 +277,7 @@ trait Assertion
                             $name,
                             $minimum,
                             $maximum,
-                            $fields[$name],
+                            $fields[$name]
                         )
                     ); 
                 }
@@ -299,7 +299,7 @@ trait Assertion
                         sprintf(
                             'Field %s should be fit with the date format of %d.',
                             $name,
-                            $ruleContent,
+                            $ruleContent
                         )
                     );
                 }
