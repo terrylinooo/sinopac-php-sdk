@@ -321,7 +321,7 @@ trait Assertion
     {
         if ($fields['pay_type'] === 'A' && $fields['amount'] > 3000000) {
             throw new QPayException(
-                'Cannot pay with ATM over $30,000 NTD. (system value: 3000000)',
+                'Cannot pay with ATM over $30,000 NTD. (system value: 3000000)'
             ); 
         }
     }
