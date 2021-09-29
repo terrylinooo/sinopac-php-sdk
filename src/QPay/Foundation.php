@@ -307,7 +307,7 @@ trait Foundation
         $decryptedData = $this->aesDecrypt(
             $data['Message'],
             $hashId,
-            $nonce,
+            $nonce
         );
 
         $data['Message'] = json_decode($decryptedData, true);
