@@ -133,7 +133,7 @@ trait Assertion
         
         foreach ($apiFieldsLimitation as $name => $limitation) {
             $limitation['required'] = isset($limitation['default']) 
-                ? true 
+                ? false 
                 : $limitation['required'];
 
             $this->assertFieldRequired($limitation['required'], $fields, $name);
