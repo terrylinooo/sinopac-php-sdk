@@ -1,2 +1,3 @@
-# sinopac-php-sdk
-永豐金 SinoPac QPay SDK for PHP.
+# 永豐金 Sinopac PHP SDK
+
+[![Build Status](https://app.travis-ci.com/terrylinooo/sinopac-php-sdk.svg?branch=master)](https://app.travis-ci.com/terrylinooo/sinopac-php-sdk)
