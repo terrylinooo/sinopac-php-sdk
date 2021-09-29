@@ -13,20 +13,14 @@ declare(strict_types=1);
 namespace Sinopac;
 
 use Sinopac\QPay\Foundation;
-use Sinopac\QPay\Assertion;
 use Sinopac\QPay\Fields;
-use Sinopac\QPay\Logger;
 
 /**
  * The Nonce API.
  */
 class QPay
 {
-    use Assertion;
-
     use Foundation;
-
-    use Logger;
 
     /**
      * Sinopac PHP SDK version number.
