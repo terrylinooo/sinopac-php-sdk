@@ -185,7 +185,7 @@ trait Assertion
                     'Field %s is expected as %s, instead of %s.',
                     $name,
                     $type,
-                    $fieldType,
+                    $fieldType
                 )
             );
         }
@@ -215,7 +215,7 @@ trait Assertion
                     'Field %s is has a size limitation of %d, the size of your input is %d.',
                     $name,
                     $length,
-                    $fieldLength,
+                    $fieldLength
                 )
             );
         }
@@ -345,7 +345,7 @@ trait Assertion
                 $name,
                 'single quotes',
                 'double quotes',
-                'percent signs',
+                'percent signs'
             );
         }
     }
