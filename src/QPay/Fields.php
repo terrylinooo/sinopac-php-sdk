@@ -37,6 +37,12 @@ class Fields
                 } else {
                     $newData[$value['name']] = $fields[$key];
                 }
+            } elseif (isset($value['default'])) {
+                if (!empty($value['parent'])) {
+                    $newData[$value['parent']][$value['name']] = $value['default'];
+                } else {
+                    $newData[$value['name']] = $value['default'];
+                }
             }
         }
 

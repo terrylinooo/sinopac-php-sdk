@@ -41,13 +41,13 @@ class FieldsTest extends TestCase
             'currency_id'             => 'TWD',
             'cc_auto_billing'         => 'N',
             'cc_expired_billing_days' => 10,
-            'cc_expired_minutes'      => 10,
             'product_name'            => '信用卡訂單',
             'return_url'              => 'http://10.11.22.113:8803/QPay.ApiClient/Store/Return',
             'backend_url'             => 'http://10.11.22.113:8803/QPay.ApiClient/AutoPush/PushSuccess',
         ];
 
         $results = Fields::getApiFields('OrderCreate', $data);
+
       
         $this->assertSame($data['shop_no'], $results['ShopNo']);
         $this->assertSame($data['order_no'], $results['OrderNo']);
@@ -58,7 +58,7 @@ class FieldsTest extends TestCase
         $this->assertSame($data['backend_url'], $results['BackendURL']);
         $this->assertSame($data['cc_auto_billing'], $results['CardParam']['AutoBilling']);
         $this->assertSame($data['cc_expired_billing_days'], $results['CardParam']['ExpBillingDays']);
-        $this->assertSame($data['cc_expired_minutes'], $results['CardParam']['ExpMinutes']);
+        $this->assertSame(10, $results['CardParam']['ExpMinutes']);
     }
 }
 

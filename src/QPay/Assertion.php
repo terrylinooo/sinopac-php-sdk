@@ -152,6 +152,10 @@ trait Assertion
     private function assertFieldRequired(bool $required, array $fields, string $name): void
     {
         if ($required && !isset($fields[$name])) {
+            if (isset($fields['default'])) {
+                return;
+            }
+
             throw new QPayException(
                 sprintf(
                     'QPay API requires %s to proccess your request.',
