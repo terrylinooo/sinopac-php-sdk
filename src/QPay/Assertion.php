@@ -132,6 +132,10 @@ trait Assertion
         $apiFieldsLimitation = Fields::{$type}($fields);
         
         foreach ($apiFieldsLimitation as $name => $limitation) {
+            $limitation['required'] = isset($limitation['default']) 
+                ? true 
+                : $limitation['required'];
+
             $this->assertFieldRequired($limitation['required'], $fields, $name);
             $this->assertFieldType($limitation['type'], $fields, $name);
             $this->assertFieldLength($limitation['length'], $fields, $name);
@@ -152,10 +156,6 @@ trait Assertion
     private function assertFieldRequired(bool $required, array $fields, string $name): void
     {
         if ($required && !isset($fields[$name])) {
-            if (isset($fields['default'])) {
-                return;
-            }
-
             throw new QPayException(
                 sprintf(
                     'QPay API requires %s to proccess your request.',
