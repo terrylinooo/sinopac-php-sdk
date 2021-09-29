@@ -169,7 +169,7 @@ trait Foundation
             $this->firstHashPair[0],
             $this->firstHashPair[1],
             $this->secondHashPair[0],
-            $this->secondHashPair[1],
+            $this->secondHashPair[1]
         );
         
         $sign = $this->getSign($body, $nonce, $hashId);
@@ -299,7 +299,7 @@ trait Foundation
             $this->firstHashPair[0],
             $this->firstHashPair[1],
             $this->secondHashPair[0],
-            $this->secondHashPair[1],
+            $this->secondHashPair[1]
         );
 
         $nonce = $this->getIV($data['Nonce']);
