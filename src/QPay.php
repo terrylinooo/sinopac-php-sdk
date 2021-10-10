@@ -66,13 +66,12 @@ class QPay
      * @return array
      * @throws QPayException
      */
-    public function createOrder(string $type, array $formData): array
+    protected function createOrder(string $type, array $formData): array
     {
         $apiService = 'OrderCreate';
         $formData['shop_no'] = $this->getShopNo();
         $formData['pay_type'] = $type;
-        $formData['currency_id'] = 'TWD';
-
+ 
         $this->assertOrderCreate($formData);
 
         $fields = Fields::getApiFields($apiService, $formData);
