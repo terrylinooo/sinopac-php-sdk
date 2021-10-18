@@ -30,7 +30,8 @@ function get_testing_shop_no()
 
 function get_testing_order_no()
 {
-    return 'TEST' . date('YmdHis');
+    $randNumber = str_pad((string) rand(1, 999999), 6, '0', STR_PAD_LEFT);
+    return 'T' . date('ymd') . $randNumber;
 }
 
 function get_testing_expired_date()
