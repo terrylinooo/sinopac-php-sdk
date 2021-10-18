@@ -24,6 +24,11 @@ class QPayTest extends TestCase
         $qpay = get_qpay_instance();
         $results = $qpay->createOrderByCreditCard($data);
 
+        echo "\n";
+        echo "測試建立信用卡訂單結果如下：\n";
+        echo json_encode($results, JSON_PRETTY_PRINT);
+        echo "\n";
+
         if (empty($results['APIService'])) {
             $this->assertTrue(false);
         } else {
@@ -57,6 +62,11 @@ class QPayTest extends TestCase
 
         $qpay = get_qpay_instance();
         $results = $qpay->createOrderByATM($data);
+
+        echo "\n";
+        echo "測試建立虛擬帳號訂單結果如下：\n";
+        echo json_encode($results, JSON_PRETTY_PRINT);
+        echo "\n";
 
         if (empty($results['APIService'])) {
             $this->assertTrue(false);
