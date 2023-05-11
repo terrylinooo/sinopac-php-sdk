@@ -95,3 +95,7 @@ if (!empty($results['Message'])) {
     print_r($results['Message']);
 }
 ```
+
+This PHP library was contributed by [Terry Lin](https://terryl.in) and [Colocal](https://colocal.com). 
+It is licensed under the MIT License.
+Should you have any inquiries regarding this library, we kindly request you to open an issue and provide a detailed description of your question.

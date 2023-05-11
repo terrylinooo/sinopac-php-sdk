@@ -61,4 +61,3 @@ class FieldsTest extends TestCase
         $this->assertSame(10, $results['CardParam']['ExpMinutes']);
     }
 }
-

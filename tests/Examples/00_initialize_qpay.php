@@ -10,13 +10,13 @@ include __DIR__ . '/../../autoload.php';
 // Method 1.
 
 $qpay = new \Sinopac\QPay([
-	'shop_no' => 'NA0249_001',
-	'hash' => [
-		'86D50DEF3EB7400E',
-		'01FD27C09E5549E5',
-		'9E004965F4244953',
-		'7FB3385F414E4F91',
-	],
+    'shop_no' => 'NA0249_001',
+    'hash' => [
+        '86D50DEF3EB7400E',
+        '01FD27C09E5549E5',
+        '9E004965F4244953',
+        '7FB3385F414E4F91',
+    ],
 ]);
 
 // Method 2.
@@ -28,4 +28,3 @@ $qpay->setSecondHashPair('9E004965F4244953', '7FB3385F414E4F91');
 
 // Enabling sandbox mode will send API request to Sinopac's testing server.
 $qpay->enableSandbox();
-

@@ -16,7 +16,7 @@ $qpay->enableSandbox();
 $data = [
     'pay_type'             => 'A',
     'order_datetime_begin' => '202109250110',
-    'order_datetime_end'   => '202109262359'
+    'order_datetime_end'   => '202109262359',
 ];
 
 $results = $qpay->queryOrders($data);

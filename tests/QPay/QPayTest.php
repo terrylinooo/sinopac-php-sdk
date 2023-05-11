@@ -95,7 +95,7 @@ class QPayTest extends TestCase
             'shop_no'              => get_testing_shop_no(),
             'pay_type'             => 'A',
             'order_datetime_begin' => date('Ymd') . '0110',
-            'order_datetime_end'   => date('Ymd') . '2359'
+            'order_datetime_end'   => date('Ymd') . '2359',
         ];
 
         $qpay = get_qpay_instance();
@@ -142,4 +142,3 @@ class QPayTest extends TestCase
         }
     }
 }
-

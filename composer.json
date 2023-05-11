@@ -10,6 +10,12 @@
             "email": "contact@terryl.in",
             "homepage": "https://terryl.in",
             "role": "Developer"
+        },
+        {
+            "name": "Coloal",
+            "email": "contact@colocal.com",
+            "homepage": "https://colocal.com",
+            "role": "Developer"
         }
     ],
     "minimum-stability": "stable",

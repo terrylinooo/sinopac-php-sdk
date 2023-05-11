@@ -9,7 +9,7 @@ class QPayDevTest extends TestCase
 {
     use Algorithm;
 
-    function test_method_getHashedMessageBody()
+    public function test_method_getHashedMessageBody()
     {
         $json = '{
             "Amount": 50000,
@@ -28,7 +28,7 @@ class QPayDevTest extends TestCase
         $this->assertSame($string, $result);
     }
 
-    function test_method_getSha256()
+    public function test_method_getSha256()
     {
         $raw = 'Amount=50000&BackendURL=http://10.11.22.113:8803/QPay.ApiClient/AutoPush/PushSuccess&CurrencyID=TWD&OrderNo=A201804270001&PayType=A&PrdtName=虛擬帳號訂單&ReturnURL=http://10.11.22.113:8803/QPay.ApiClient/Store/Return&ShopNo=BA0026_001';
         $raw .= 'NjM2NjA0MzI4ODIyODguMzo3NzI0ZDg4ZmI5Nzc2YzQ1MTNhYzg2MTk3NDBlYTRhNGU0N2IxM2Q2M2JkMTIwOGU5YzZhMGFmNGY5MjA5YzVm';
@@ -39,7 +39,7 @@ class QPayDevTest extends TestCase
         $this->assertSame($string, $this->getSha256($raw));
     }
 
-    function test_method_getIV()
+    public function test_method_getIV()
     {
         $nonce = 'NjM2NjA0MzI4ODIyODguMzo3NzI0ZDg4ZmI5Nzc2YzQ1MTNhYzg2MTk3NDBlYTRhNGU0N2IxM2Q2M2JkMTIwOGU5YzZhMGFmNGY5MjA5YzVm';
         $string = strtoupper(hash('sha256', $nonce));
@@ -48,7 +48,7 @@ class QPayDevTest extends TestCase
         $this->assertSame($string, $this->getIV($nonce));
     }
 
-    function test_method_getHashId()
+    public function test_method_getHashId()
     {
         $A1 = '4D9709D699CA40EE'; 
         $A2 = '5A4FEF83140C4E9E';
@@ -60,7 +60,7 @@ class QPayDevTest extends TestCase
         $this->assertSame('17D8E6558DC60E702A6B57E1B9B7060D', $result);
     }
 
-    function test_method_aesEncrypt()
+    public function test_method_aesEncrypt()
     {
         $nonce = 'NjM2NjA0MzI4ODIyODguMzo3NzI0ZDg4ZmI5Nzc2YzQ1MTNhYzg2MTk3NDBlYTRhNGU0N2IxM2Q2M2JkMTIwOGU5YzZhMGFmNGY5MjA5YzVm';
         $hashId = '17D8E6558DC60E702A6B57E1B9B7060D';
@@ -72,7 +72,7 @@ class QPayDevTest extends TestCase
         $this->assertSame($expectedString, $encryptedString);
     }
 
-    function test_method_getSign()
+    public function test_method_getSign()
     {
         $nonce = 'NjM2NjA0MzI4ODIyODguMzo3NzI0ZDg4ZmI5Nzc2YzQ1MTNhYzg2MTk3NDBlYTRhNGU0N2IxM2Q2M2JkMTIwOGU5YzZhMGFmNGY5MjA5YzVm';
         $hashId = '17D8E6558DC60E702A6B57E1B9B7060D';
@@ -153,7 +153,7 @@ class QPayDevTest extends TestCase
     {
         // Begin - 建立付款訂單模擬資料 ok
 
-        $A1 = '86D50DEF3EB7400E'; 
+        $A1 = '86D50DEF3EB7400E';
         $A2 = '01FD27C09E5549E5';
         $B1 = '9E004965F4244953';
         $B2 = '7FB3385F414E4F91';
@@ -212,7 +212,7 @@ class QPayDevTest extends TestCase
 
     public function test_method_aesDecrypt()
     {
-        $A1 = '86D50DEF3EB7400E'; 
+        $A1 = '86D50DEF3EB7400E';
         $A2 = '01FD27C09E5549E5';
         $B1 = '9E004965F4244953';
         $B2 = '7FB3385F414E4F91';
@@ -242,7 +242,6 @@ class QPayDevTest extends TestCase
         echo "\n";
         echo "解密還原結果如下：\n";
         echo $string;
-        echo "\n";  
+        echo "\n";
     }
 }
-
