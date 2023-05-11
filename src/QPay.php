@@ -24,7 +24,7 @@ class QPay
 
     /**
      * Sinopac PHP SDK version number.
-     * 
+     *
      * @var string
      */
     const SDK_VERSION = '0.0.1';
@@ -62,7 +62,6 @@ class QPay
      *
      * @param string $type     The payment type, option: C | A
      * @param array  $formData The message body.
-     *
      * @return array
      * @throws QPayException
      */
@@ -85,7 +84,6 @@ class QPay
      * Create an order by using Credit Card payment.
      *
      * @param array $formData The message body.
-     *
      * @return array
      */
     public function createOrderByCreditCard(array $formData): array
@@ -97,7 +95,6 @@ class QPay
      * Create an order by using ATM (Virtual Account).
      *
      * @param array $formData The message body.
-     *
      * @return array
      */
     public function createOrderByATM(array $formData): array
@@ -109,7 +106,6 @@ class QPay
      * Query a deluge of orders' information.
      *
      * @param array $formData The message body.
-     *
      * @return array
      */
     public function queryOrders(array $formData): array
@@ -130,7 +126,6 @@ class QPay
      * Query a single order's information by its PayToken.
      *
      * @param string $token  The PayToken.
-     *
      * @return array
      */
     public function queryOrderByToken(string $token): array

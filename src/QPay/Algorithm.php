@@ -51,7 +51,7 @@ trait Algorithm
     {
         ksort($body);
 
-        $body = array_filter($body, function($value) {
+        $body = array_filter($body, function ($value) {
             return !empty($value) && !is_array($value);
         });
 
@@ -65,9 +65,8 @@ trait Algorithm
      *
      * Detailed explanation:
      * https://ithelp.ithome.com.tw/articles/10268021
-     * 
-     * @param string $nonce The Nonce string.
      *
+     * @param string $nonce The Nonce string.
      * @return string
      */
     public function getIV(string $nonce): string
@@ -82,7 +81,6 @@ trait Algorithm
      * Return the uppercase SHA-256 string.
      *
      * @param string $string Any string you want to encrypt.
-     *
      * @return string
      */
     public function getSha256(string $string): string
@@ -93,7 +91,7 @@ trait Algorithm
     /**
      * Get the signature sign from the message body, Nonce and HashId.
      * Check out the rules on P.13
-     * 
+     *
      * Detailed explanation:
      * https://ithelp.ithome.com.tw/articles/10267405
      *
@@ -118,10 +116,9 @@ trait Algorithm
      * @param array  $data The data fields of requesting API.
      * @param string $key  The key used to encrypt.
      * @param string $iv   The IV used to encrypt.
-     *
      * @return string
      */
-    function aesEncrypt(array $data, string $key, string $iv): string
+    public function aesEncrypt(array $data, string $key, string $iv): string
     {
         $json = json_encode($data);
         $encrypt = openssl_encrypt($json, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
@@ -133,23 +130,21 @@ trait Algorithm
     /**
      * Decrypt data by AES-256-CBC
      *
-     * @param array  $hex The Message field of the API returned string.
+     * @param string  $hex The Message field of the API returned string.
      * @param string $key The key used to encrypt.
      * @param string $iv  The IV used to encrypt.
-     *
      * @return string
      */
-    function aesDecrypt(string $hex, string $key, string $iv): string
+    public function aesDecrypt(string $hex, string $key, string $iv): string
     {
         $data = hex2bin($hex);
         $result = openssl_decrypt($data, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
-
         return $result;
     }
 
     /**
      * Get the HashId.
-     * 
+     *
      * Detailed explanation:
      * https://ithelp.ithome.com.tw/articles/10266442
      *
@@ -157,7 +152,6 @@ trait Algorithm
      * @param string $hashA2
      * @param string $hashB1
      * @param string $hashB2
-     *
      * @return string
      */
     public function getHashId(
@@ -190,15 +184,15 @@ trait Algorithm
      *
      * @param array $decimalGroup1 The first place.
      * @param array $decimalGroup2 The second place compares with the first.
-     *
      * @return array
      */
     private function getXOR(array $decimalGroup1, array $decimalGroup2): array
     {
         $results = [];
+        $groupCount = count($decimalGroup1);
 
-        for ($i = 0; $i < count($decimalGroup1); $i++ ) {
-            $results[$i] = ($decimalGroup1[$i] ^ $decimalGroup2[$i]);		
+        for ($i = 0; $i < $groupCount; $i++) {
+            $results[$i] = ($decimalGroup1[$i] ^ $decimalGroup2[$i]);
         }
 
         return $results;
@@ -214,9 +208,10 @@ trait Algorithm
     private function hexToDec(string $string): array
     {
         $decimalGroup = [];
+        $len = strlen($string);
         $j = 0;
         
-        for ($i = 0; $i < strlen($string); $i += 2) {
+        for ($i = 0; $i < $len; $i += 2) {
             $decimalGroup[$j] = (int) base_convert(substr($string, $i, 2), 16, 10);
             $j++;
         }
@@ -234,8 +229,9 @@ trait Algorithm
     private function restoreDecToHex(array $decimalGroup): string
     {
         $hexGroup = [];
+        $groupCount = count($decimalGroup);
 
-        for ($i = 0; $i < count($decimalGroup); $i++) {
+        for ($i = 0; $i < $groupCount; $i++) {
             $hexGroup[$i] = base_convert((string) $decimalGroup[$i], 10, 16);
             $hexGroup[$i] = str_pad($hexGroup[$i], 2, '0', STR_PAD_LEFT);
         }

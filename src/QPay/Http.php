@@ -73,7 +73,7 @@ class Http
             $data = [
                 'success'    => false,
                 'error_code' => $errorCode,
-                'message'    => sprintf( 'cURL returns an error code #%s', $errorCode),
+                'message'    => sprintf('cURL returns an error code #%s', $errorCode),
                 'data'       => [],
             ];
         } else {
@@ -90,4 +90,3 @@ class Http
         return $data;
     }
 }
-

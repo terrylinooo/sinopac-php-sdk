@@ -90,7 +90,7 @@ trait Assertion
      */
     protected function assertOrderCreate(array $fields): void
     {
-        $this->assertApiServiceFields('OrderCreate', $fields);
+        $this->assertApiServiceFields('orderCreate', $fields);
     }
 
     /**
@@ -103,7 +103,7 @@ trait Assertion
      */
     protected function assertOrderQuery(array $fields): void
     {
-        $this->assertApiServiceFields('OrderQuery', $fields);
+        $this->assertApiServiceFields('orderQuery', $fields);
     }
 
     /**
@@ -116,7 +116,7 @@ trait Assertion
      */
     protected function assertOrderPayQuery(array $fields): void
     {
-        $this->assertApiServiceFields('OrderPayQuery', $fields);
+        $this->assertApiServiceFields('orderPayQuery', $fields);
     }
 
     /**
@@ -132,8 +132,8 @@ trait Assertion
         $apiFieldsLimitation = Fields::{$type}($fields);
         
         foreach ($apiFieldsLimitation as $name => $limitation) {
-            $limitation['required'] = isset($limitation['default']) 
-                ? false 
+            $limitation['required'] = isset($limitation['default'])
+                ? false
                 : $limitation['required'];
 
             $this->assertFieldRequired($limitation['required'], $fields, $name);
@@ -283,7 +283,7 @@ trait Assertion
                             $maximum,
                             $fields[$name]
                         )
-                    ); 
+                    );
                 }
 
                 break;
@@ -326,7 +326,7 @@ trait Assertion
         if ($fields['pay_type'] === 'A' && $fields['amount'] > 3000000) {
             throw new QPayException(
                 'Cannot pay with ATM over $30,000 NTD. (system value: 3000000)'
-            ); 
+            );
         }
     }
 

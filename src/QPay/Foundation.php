@@ -16,6 +16,7 @@ use Sinopac\QPay\Algorithm;
 use Sinopac\QPay\Assertion;
 use Sinopac\QPay\Logger;
 use Sinopac\QPay\Http;
+use Sinopac\Exception\QPayException;
 
 /**
  * The Foundation trait.
@@ -42,7 +43,7 @@ trait Foundation
      */
     private $apiUrl = [
         'prod' => 'https://api.sinopac.com/funBIZ/QPay.WebAPI/api',
-        'test' => 'https://apisbx.sinopac.com/funBIZ/QPay.WebAPI/api'
+        'test' => 'https://apisbx.sinopac.com/funBIZ/QPay.WebAPI/api',
     ];
 
     /**
@@ -83,7 +84,6 @@ trait Foundation
      * Set up Shop No.
      *
      * @param string $no The Shop No will be set.
-     *
      * @return void
      */
     public function setShopNo(string $no): void
@@ -96,7 +96,6 @@ trait Foundation
      *
      * @param string $a1 The A1 hash key.
      * @param string $a2 The B1 hash key.
-     *
      * @return void
      */
     public function setFirstHashPair(string $a1, string $a2): void
@@ -112,7 +111,6 @@ trait Foundation
      *
      * @param string $b1 The B1 hash key.
      * @param string $b2 The B2 hash key.
-     *
      * @return void
      */
     public function setSecondHashPair(string $b1, string $b2): void
@@ -127,7 +125,6 @@ trait Foundation
      * Set up Nonce
      *
      * @param string $nonce The Nonce.
-     *
      * @return void
      */
     public function setNonce(string $nonce): void
@@ -150,8 +147,7 @@ trait Foundation
      *
      * @param string $type The service type of the Order API.
      * @param array  $body The data fields will be sent.
-     *
-     * @return string
+     * @return array
      */
     public function getRequestBody(string $type, array $body): ?array
     {
@@ -214,7 +210,7 @@ trait Foundation
     /**
      * Fetch the fresh Nonce.
      *
-     * @return void
+     * @return string
      */
     public function getNonce(): string
     {
@@ -259,7 +255,8 @@ trait Foundation
     /**
      * Send a request to Order API.
      *
-     * @return void
+     * @return array
+     * @throws QPayException
      */
     public function sendRequest(array $parameters): array
     {
@@ -277,22 +274,8 @@ trait Foundation
 
         $data = json_decode($result['data'], true);
 
-        if (!empty($data['Status'])) {
-            $this->log(
-                'info', 
-                '[Order] Received API response.',
-                ['data' => $result]
-            );
-        } else {
-            $this->log(
-                'warning', 
-                '[Order] Received incorrect result from API.',
-                ['data' => $result]
-            );
-        }
-
-        if (!is_array($data)) {
-            $data = [];
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            throw new QPayException('[Order] Received incorrect result from Sinopac API. (#1)');
         }
 
         $hashId = $this->getHashId(
@@ -301,6 +284,10 @@ trait Foundation
             $this->secondHashPair[0],
             $this->secondHashPair[1]
         );
+
+        if (empty($data['Nonce'])) {
+            throw new QPayException('[Order] API nonce is empty.  (#2)');
+        }
 
         $nonce = $this->getIV($data['Nonce']);
 
