@@ -12,10 +12,12 @@ declare(strict_types=1);
 
 namespace Sinopac\QPay;
 
-use InvalidArgumentException;
+use Sinopac\Exception\QPayException;
 
 /**
  * The Logger trait
+ *
+ * @deprecated 0.2.1
  */
 trait Logger
 {
@@ -36,7 +38,7 @@ trait Logger
     public function setLogger($logger): void
     {
         if (!$this->logger instanceof \Monolog\Logger) {
-            throw new InvalidArgumentException(
+            throw new QPayException(
                 'Logger should be an instance of Monolog Logger.'
             );
         }

@@ -16,6 +16,7 @@ use Sinopac\QPay\Algorithm;
 use Sinopac\QPay\Assertion;
 use Sinopac\QPay\Logger;
 use Sinopac\QPay\Http;
+use Sinopac\QPay\ErrorEnum;
 use Sinopac\Exception\QPayException;
 
 /**
@@ -171,14 +172,14 @@ trait Foundation
      * @param array  $body The data fields will be sent.
      * @return array
      */
-    public function getRequestBody(string $type, array $body): ?array
+    public function getRequestBody(string $type, array $body): array
     {
         $this->assertServiceType($type);
 
         $nonce = $this->getNonce();
 
         if (empty($nonce)) {
-            return null;
+            return [];
         }
 
         $iv = $this->getIV($nonce);
@@ -254,32 +255,30 @@ trait Foundation
             'ShopNo' => $this->getShopNo(),
         ];
 
-        $result = Http::request($apiUrl, $parameters, $keyId);
+        $response = Http::request($apiUrl, $parameters, $keyId);
+        $bodyContent = $response->getBody()->getContents();
+        $httpStatusCode = $response->getStatusCode();
 
-        if (!$result['success']) {
-            $this->log(
-                'error',
-                '[Nonce] cURL failed.',
-                ['data' => $result]
+        if ($httpStatusCode !== 200) {
+            throw new QPayException(
+                sprintf(
+                    ErrorEnum::API_UNEXPECTED_HTTP_STATUS_ERROR,
+                    $httpStatusCode
+                ),
             );
         }
 
-        $data = json_decode($result['data'], true);
+        $data = json_decode($bodyContent, true);
 
-        if (!empty($data['Nonce'])) {
-            $nonce = $data['Nonce'];
-
-            $this->log(
-                'info',
-                '[Nonce] Received API response.',
-                ['data' => $result]
+        if (empty($data['Nonce'])) {
+            throw new QPayException(
+                sprintf(
+                    ErrorEnum::API_UNEXPECTED_RESULTS_ERROR,
+                    $bodyContent
+                )
             );
         } else {
-            $this->log(
-                'warning',
-                '[Nonce] Received incorrect result from API.',
-                ['data' => $result]
-            );
+            $nonce = $data['Nonce'];
         }
 
         return $nonce;
@@ -296,20 +295,29 @@ trait Foundation
         $apiUrl = $this->getApiUrl('Order');
         $keyId = $this->getKeyId();
 
-        $result = Http::request($apiUrl, $parameters, $keyId);
+        $response = Http::request($apiUrl, $parameters, $keyId);
+        $bodyContent = $response->getBody()->getContents();
+        $httpStatusCode = $response->getStatusCode();
 
-        if (!$result['success']) {
-            $this->log(
-                'error',
-                '[Nonce] cURL failed.',
-                ['data' => $result]
+        if ($httpStatusCode !== 200) {
+            throw new QPayException(
+                sprintf(
+                    ErrorEnum::API_UNEXPECTED_HTTP_STATUS_ERROR,
+                    $httpStatusCode,
+                    $bodyContent
+                ),
             );
         }
 
-        $data = json_decode($result['data'], true);
+        $data = json_decode($bodyContent, true);
 
-        if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new QPayException('[Order] Received incorrect result from Sinopac API. (#1)');
+        if (JSON_ERROR_NONE !== json_last_error() || empty($data['Nonce'])) {
+            throw new QPayException(
+                sprintf(
+                    ErrorEnum::API_UNEXPECTED_RESULTS_ERROR,
+                    $bodyContent
+                )
+            );
         }
 
         $hashId = $this->getHashId(
@@ -318,10 +326,6 @@ trait Foundation
             $this->secondHashPair[0],
             $this->secondHashPair[1]
         );
-
-        if (empty($data['Nonce'])) {
-            throw new QPayException('[Order] API nonce is empty.  (#2)');
-        }
 
         $nonce = $this->getIV($data['Nonce']);
 

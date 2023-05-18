@@ -13,10 +13,10 @@ declare(strict_types=1);
 namespace Sinopac\QPay;
 
 use Sinopac\QPay;
-use InvalidArgumentException;
+use Sinopac\Exception\QPayException;
+use Shieldon\Psr7\Response;
 
 use function curl_close;
-use function curl_errno;
 use function curl_exec;
 use function curl_init;
 use function curl_setopt;
@@ -29,18 +29,20 @@ use function sprintf;
  */
 class Http
 {
+    private static $headers = [];
+
     /**
      * Send a HTTP request.
      *
      * @param string $url The request target URL.
      * @param array $fields The data fields to send.
-     * @param string $xKeyId The X-KeyID to send.
-     * @return array
+     * @param string $keyId The X-KeyID to send.
+     * @return Response
      */
-    public static function request(string $url, array $fields, string $xKeyId): array
+    public static function request(string $url, array $fields, string $keyId): Response
     {
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new InvalidArgumentException(
+            throw new QPayException(
                 sprintf('Invalid URL %s', $url)
             );
         }
@@ -49,24 +51,25 @@ class Http
             'Content-Type: application/json',
         ];
 
-        if (!empty($xKeyId)) {
-            $headers[] = 'X-KeyID: ' . $xKeyId;
+        if (!empty($keyId)) {
+            $headers[] = 'X-KeyID: ' . $keyId;
         }
 
         return self::cURL($url, $fields, $headers);
     }
 
     /**
-     * Create a HTTP request throgh cURL.
+     * Create a HTTP request through cURL.
      *
      * @param string $url The request target URL.
      * @param array $fields The data fields to send.
      * @param array $headers The HTTP headers to send.
-     * @return array
+     * @return Response
      */
-    protected static function cURL(string $url, array $fields, array $headers): array
+    protected static function cURL(string $url, array $fields, array $headers): Response
     {
         $ch = curl_init($url);
+        self::$headers = [];
 
         $fields = json_encode($fields, JSON_FORCE_OBJECT);
         $agent = 'sinopac-php-sdk/' . QPay::SDK_VERSION;
@@ -79,29 +82,65 @@ class Http
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_USERAGENT, $agent);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_HEADERFUNCTION, [new self(), 'readHeaders']);
 
         $results = curl_exec($ch);
-
-        if (curl_errno($ch)) {
-            $errorCode = curl_errno($ch);
-
-            $data = [
-                'success'    => false,
-                'error_code' => $errorCode,
-                'message'    => sprintf('cURL returns an error code #%s', $errorCode),
-                'data'       => [],
-            ];
-        } else {
-            $data = [
-                'success'    => true,
-                'error_code' => 0,
-                'message'    => 'API is successfully called.',
-                'data'       => $results,
-            ];
-        }
-
         curl_close($ch);
 
-        return $data;
+        $parsedHeaders = self::getParsedHeaders();
+
+        return new Response(
+            $parsedHeaders['statusCode'],
+            $parsedHeaders['headers'],
+            $results,
+            $parsedHeaders['version'],
+            $parsedHeaders['reason']
+        );
+    }
+
+    /**
+     * Parse the HTTP header.
+     *
+     * @param mixed $curl
+     * @param string $headerLine
+     * @return int
+     */
+    protected static function readHeaders($curl, string $headerLine): int
+    {
+        array_push(self::$headers, trim($headerLine));
+        return strlen($headerLine);
+    }
+
+    /**
+     * Get parsed headers.
+     *
+     * @return array
+     */
+    protected static function getParsedHeaders(): array
+    {
+        $prepareHeaders = [];
+        $version = '';
+        $statusCode = 0;
+        $reason = '';
+        foreach (self::$headers as $header) {
+            $colonPosition = strpos($header, ':');
+            if ($colonPosition === false) {
+                if (preg_match('/HTTP\/(\d+\.\d+)\s+(\d+)\s+(.*)/', $header, $matches)) {
+                    $version = $matches[1];
+                    $statusCode = (int) $matches[2];
+                    $reason = $matches[3];
+                }
+                continue;
+            }
+            $name = substr($header, 0, $colonPosition);
+            $value = substr($header, $colonPosition + 1);
+            $prepareHeaders[$name] = $value;
+        }
+        return [
+            'version' => $version,
+            'statusCode' => $statusCode,
+            'reason' => $reason,
+            'headers' => $prepareHeaders,
+        ];
     }
 }

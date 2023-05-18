@@ -27,7 +27,7 @@ class QPay
      *
      * @var string
      */
-    const SDK_VERSION = '0.0.1';
+    const SDK_VERSION = '0.2.1';
 
     /**
      * Constructor.

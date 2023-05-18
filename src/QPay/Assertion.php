@@ -14,7 +14,7 @@ namespace Sinopac\QPay;
 
 use Sinopac\Exception\QPayException;
 use Sinopac\QPay\Fields;
-use InvalidArgumentException;
+use Sinopac\QPay\ErrorEnum;
 use DateTime;
 
 use function explode;
@@ -48,7 +48,7 @@ trait Assertion
         if (!in_array($type, $supportedTypes)) {
             throw new QPayException(
                 sprintf(
-                    'Service type %s is not supported.',
+                    ErrorEnum::FIELD_SERVICE_TYPE_ERROR,
                     $type
                 )
             );
@@ -61,21 +61,26 @@ trait Assertion
      * @param array $data A collect of configuration values.
      *
      * @return void
-     * @throws InvalidArgumentException
+     * @throws QPayException
      */
     protected function assertConfig(array $data): void
     {
         if (empty($data['shop_no'])) {
-            throw new InvalidArgumentException('shop_no is missing.');
+            throw new QPayException(ErrorEnum::FIELD_SHOP_NO_ERROR);
         }
 
         if (empty($data['hash'])) {
-            throw new InvalidArgumentException('The hash keys for the pair A and B are needed.');
+            throw new QPayException(ErrorEnum::FIELD_HASH_KEY_PAIR_ERROR);
         }
 
         for ($i = 0; $i <= 3; $i++) {
             if (empty($data['hash'][$i])) {
-                throw new InvalidArgumentException('The hash key ' . $i . ' is missing.');
+                throw new QPayException(
+                    sprintf(
+                        ErrorEnum::FIELD_HASH_KEY_ERROR,
+                        $i
+                    )
+                );
             }
         }
     }
@@ -158,7 +163,7 @@ trait Assertion
         if ($required && !isset($fields[$name])) {
             throw new QPayException(
                 sprintf(
-                    'QPay API requires %s to proccess your request.',
+                    ErrorEnum::FIELD_MISSING_FIELD_ERROR,
                     $name
                 )
             );
@@ -186,7 +191,7 @@ trait Assertion
         if ($fieldType !== $type) {
             throw new QPayException(
                 sprintf(
-                    'Field %s is expected as %s, instead of %s.',
+                    ErrorEnum::FIELD_VARIABLE_TYPE_ERROR,
                     $name,
                     $type,
                     $fieldType
@@ -216,7 +221,7 @@ trait Assertion
         if ($fieldLength > $length) {
             throw new QPayException(
                 sprintf(
-                    'Field %s is has a size limitation of %d, the size of your input is %d.',
+                    ErrorEnum::FIELD_SIZE_ERROR,
                     $name,
                     $length,
                     $fieldLength
@@ -251,12 +256,9 @@ trait Assertion
                 $ruleOptions = explode('|', $ruleContent);
 
                 if (!in_array($fields[$name], $ruleOptions)) {
-                    $message = 'Field %s has a value not fit the requirement, ';
-                    $message .= 'the options should be "%s", but "%s" found.';
-
                     throw new QPayException(
                         sprintf(
-                            $message,
+                            ErrorEnum::FIELD_RULE_STRING_ERROR,
                             $name,
                             implode(', ', $ruleOptions),
                             $fields[$name]
@@ -272,12 +274,9 @@ trait Assertion
                 $maximum = $ruleOptions[1];
 
                 if ($fields[$name] < $minimum || $fields[$name] > $maximum) {
-                    $message = 'Field %s has a value not fit the requirement, ';
-                    $message .= 'the options should be between "%d" and "%d", but "%d" found.';
-
                     throw new QPayException(
                         sprintf(
-                            $message,
+                            ErrorEnum::FIELD_RULE_INTEGER_ERROR,
                             $name,
                             $minimum,
                             $maximum,
@@ -301,7 +300,7 @@ trait Assertion
                 if (!$check) {
                     throw new QPayException(
                         sprintf(
-                            'Field %s should be fit with the date format of %d.',
+                            ErrorEnum::FIELD_RULE_DATE_ERROR,
                             $name,
                             $ruleContent
                         )
@@ -324,9 +323,7 @@ trait Assertion
     private function assertFieldAmount(array $fields, string $name): void
     {
         if ($fields['pay_type'] === 'A' && $fields['amount'] > 3000000) {
-            throw new QPayException(
-                'Cannot pay with ATM over $30,000 NTD. (system value: 3000000)'
-            );
+            throw new QPayException(ErrorEnum::FIELD_AMOUNT_EXCEED_ERROR);
         }
     }
 
@@ -345,11 +342,8 @@ trait Assertion
 
         if ($fields[$name] !== $string) {
             sprintf(
-                'Field %s contains invalid characters, such as %s, %s and %s.',
+                ErrorEnum::FIELD_INVALID_CHARACTERS_ERROR,
                 $name,
-                'single quotes',
-                'double quotes',
-                'percent signs'
             );
         }
     }

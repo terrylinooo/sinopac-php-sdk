@@ -202,7 +202,7 @@ class QPayDevTest extends TestCase
             'Message'    => $message,
         ];
 
-        $ch = curl_init('https://apisbx.sinopac.com/funBIZ/QPay.WebAPI/api/Order');
+        $ch = curl_init('https://apisbx.sinopac.com/funBIZ-Sbx/QPay.WebAPI/api/Nonce');
 
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -212,6 +212,7 @@ class QPayDevTest extends TestCase
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
+            'X-KeyID: b5e6986d-8636-4aa0-8c93-441ad14b2098',
         ]);
 
         $results = curl_exec($ch);
