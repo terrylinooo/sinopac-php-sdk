@@ -31,8 +31,7 @@ class ErrorEnum
     const FIELD_RULE_DATE_ERROR = 'Field %s should adhere to the date format %s. (1010)';
     const FIELD_AMOUNT_EXCEED_ERROR = 'ATM payments cannot exceed $30,000 NTD. (1011)';
     const FIELD_INVALID_CHARACTERS_ERROR = 'The field %s contains invalid characters. (1012)';
-
-    const HTTP_CURL_CONNECTION_ERROR = 'The field %s contains invalid characters. (2001)';
+    const HTTP_CURL_CONNECTION_ERROR = 'cURL connection error occurred during Sinopac API request. (2001)';
     const API_UNEXPECTED_HTTP_STATUS_ERROR = 'The Sinopac API returned an unexpected HTTP status code. Expected 200, but received %s. Please check the response body below: %s (3001)';
     const API_UNEXPECTED_RESULTS_ERROR = 'Unexpected results were received from the Sinopac API. Please check the response body below: %s (3002)';
 }
