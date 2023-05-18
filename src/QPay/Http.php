@@ -29,7 +29,15 @@ use function sprintf;
  */
 class Http
 {
-    public static function request(string $url, array $fields): array
+    /**
+     * Send a HTTP request.
+     *
+     * @param string $url The request target URL.
+     * @param array $fields The data fields to send.
+     * @param string $xKeyId The X-KeyID to send.
+     * @return array
+     */
+    public static function request(string $url, array $fields, string $xKeyId): array
     {
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
             throw new InvalidArgumentException(
@@ -37,17 +45,26 @@ class Http
             );
         }
 
-        return self::cURL($url, $fields);
+        $headers = [
+            'Content-Type: application/json',
+        ];
+
+        if (!empty($xKeyId)) {
+            $headers[] = 'X-KeyID: ' . $xKeyId;
+        }
+
+        return self::cURL($url, $fields, $headers);
     }
 
     /**
      * Create a HTTP request throgh cURL.
      *
-     * @param string $url    The request target URL.
-     * @param array  $fields The data fields to send.
+     * @param string $url The request target URL.
+     * @param array $fields The data fields to send.
+     * @param array $headers The HTTP headers to send.
      * @return array
      */
-    protected static function cURL(string $url, array $fields): array
+    protected static function cURL(string $url, array $fields, array $headers): array
     {
         $ch = curl_init($url);
 
@@ -61,9 +78,7 @@ class Http
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_USERAGENT, $agent);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-        ]);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         $results = curl_exec($ch);
 

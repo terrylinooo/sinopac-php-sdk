@@ -50,7 +50,7 @@ class QPayDevTest extends TestCase
 
     public function test_method_getHashId()
     {
-        $A1 = '4D9709D699CA40EE'; 
+        $A1 = '4D9709D699CA40EE';
         $A2 = '5A4FEF83140C4E9E';
         $B1 = 'BC74301945134CB4';
         $B2 = '961F67F8FCA44AB9';
@@ -131,7 +131,10 @@ class QPayDevTest extends TestCase
             'ShopNo' => 'NA0249_001',
         ];
 
-        $ch = curl_init('https://apisbx.sinopac.com/funBIZ/QPay.WebAPI/api/Nonce');
+        // This is old-version sandbox API
+        //$ch = curl_init('https://apisbx.sinopac.com/funBIZ/QPay.WebAPI/api/Nonce');
+
+        $ch = curl_init('https://apisbx.sinopac.com/funBIZ-Sbx/QPay.WebAPI/api/Nonce');
 
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -141,12 +144,21 @@ class QPayDevTest extends TestCase
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
+            'X-KeyID: b5e6986d-8636-4aa0-8c93-441ad14b2098',
         ]);
 
         $results = curl_exec($ch);
         $data = json_decode($results, true);
 
         return $data['Nonce'];
+    }
+
+    public function testGetNonce()
+    {
+        $data = $this->getNonce();
+        echo "Get Nonce from API: $data \n";
+
+        $this->assertTrue(!empty($data));
     }
 
     public function test_createOrder()

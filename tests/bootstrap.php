@@ -16,6 +16,7 @@ function get_qpay_instance()
             CONFIG_HASH_B1,
             CONFIG_HASH_B2,
         ],
+        'key_id' => 'b5e6986d-8636-4aa0-8c93-441ad14b2098',
     ]);
 
     $instance->enableSandbox();

@@ -52,6 +52,10 @@ class QPay
             );
         }
 
+        if (!empty($config['key_id'])) {
+            $this->setKeyId($config['key_id']);
+        }
+
         if (!empty($config['logger'])) {
             $this->setLogger($config['logger']);
         }

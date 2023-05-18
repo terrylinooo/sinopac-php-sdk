@@ -43,7 +43,9 @@ trait Foundation
      */
     private $apiUrl = [
         'prod' => 'https://api.sinopac.com/funBIZ/QPay.WebAPI/api',
-        'test' => 'https://apisbx.sinopac.com/funBIZ/QPay.WebAPI/api',
+        'test' => 'https://apisbx.sinopac.com/funBIZ-Sbx/QPay.WebAPI/api',
+        'legacy_test' => 'https://apisbx.sinopac.com/funBIZ/QPay.WebAPI/api',
+        
     ];
 
     /**
@@ -79,6 +81,15 @@ trait Foundation
         0 => '',
         1 => '',
     ];
+
+    /**
+     * This is used on sending HTTP request.
+     * For the header field X-KeyID.
+     * It takes effect since the end of April 2023.
+     *
+     * @var string
+     */
+    private $keyId = '';
 
     /**
      * Set up Shop No.
@@ -119,6 +130,17 @@ trait Foundation
             $b1,
             $b2,
         ];
+    }
+
+    /**
+     * Set up Key ID.
+     *
+     * @param string $keyId The Key ID.
+     * @return void
+     */
+    public function setKeyId(string $keyId): void
+    {
+        $this->keyId = $keyId;
     }
 
     /**
@@ -194,6 +216,16 @@ trait Foundation
     }
 
     /**
+     * Get the Key ID.
+     *
+     * @return string
+     */
+    public function getKeyId(): string
+    {
+        return $this->keyId;
+    }
+
+    /**
      * Get the API URL.
      *
      * @return string
@@ -216,12 +248,13 @@ trait Foundation
     {
         $nonce = '';
         $apiUrl = $this->getApiUrl('Nonce');
+        $keyId = $this->getKeyId();
 
         $parameters = [
             'ShopNo' => $this->getShopNo(),
         ];
 
-        $result = Http::request($apiUrl, $parameters);
+        $result = Http::request($apiUrl, $parameters, $keyId);
 
         if (!$result['success']) {
             $this->log(
@@ -261,8 +294,9 @@ trait Foundation
     public function sendRequest(array $parameters): array
     {
         $apiUrl = $this->getApiUrl('Order');
+        $keyId = $this->getKeyId();
 
-        $result = Http::request($apiUrl, $parameters);
+        $result = Http::request($apiUrl, $parameters, $keyId);
 
         if (!$result['success']) {
             $this->log(
