@@ -263,7 +263,8 @@ trait Foundation
             throw new QPayException(
                 sprintf(
                     ErrorEnum::API_UNEXPECTED_HTTP_STATUS_ERROR,
-                    $httpStatusCode
+                    $httpStatusCode,
+                    $bodyContent
                 ),
             );
         }
